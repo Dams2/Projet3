@@ -1,5 +1,5 @@
 //
-//  main.swift
+//  Chest.swift
 //  Projet3
 //
 //  Created by Damien Rojo on 29/05/2019.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-let game = Game()
-game.start()
-
+final class Chest {
+    
+}
