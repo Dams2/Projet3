@@ -8,42 +8,48 @@
 
 import Foundation
 
-enum CharacterType {
-    case dwarf
-    case warrior
-    case colossus
-    case magus
+/// Doc... 🙇‍♂️
+enum CharacterType: Int {
+    case dwarf = 0
+    case warrior = 1
+    case colossus = 2
+    case magus = 3
 }
 
-// Name
-// Type
-// Life
-// Weapon
+// Tips: let type = CharacterType(rawValue: 2) <- metre la veleur entrée par l'utilisateur.
+
+/// Doc for character
 final class Character {
     
-    // MARK: - Private properties
+    // MARK: - Properties
     
     let name: String
     
     let type: CharacterType
     
-    let life: Int
-    
     let weapon: Weapon
     
+    let life: Int
     
     // MARK: - Initializer
     
-    init(name: String, type: CharacterType, weapon: Weapon) {
+    init(name: String, type: CharacterType) {
         self.name = name
         self.type = type
-        self.weapon = weapon
         
         switch self.type {
-        case .dwarf: self.life = 60
-        case .warrior: self.life = 100
-        case .colossus: self.life = 120
-        case .magus: self.life = 80
+        case .dwarf:
+            self.life = 60
+            self.weapon = Weapon(type: .axe)
+        case .warrior:
+            self.life = 100
+            self.weapon = Weapon(type: .sword)
+        case .colossus:
+            self.life = 120
+            self.weapon = Weapon(type: .lance)
+        case .magus:
+            self.life = 80
+            self.weapon = Weapon(type: .rosary)
         }
     }
 }

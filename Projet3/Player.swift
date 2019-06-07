@@ -23,6 +23,5 @@ final class Player {
     init(name: String, team: [Character]) {
         self.name = name
         self.team = team
-    }
-    
+    }    
 }

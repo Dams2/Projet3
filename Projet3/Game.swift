@@ -10,62 +10,89 @@ import Foundation
 
 final class Game {
     
-    var player: [Player] = []
-    
+    private let playerQuantity = 2
+    private let characterQuantity = 3
+    private var players: [Player] = []
+    private var names: [String] = []
+
     // MARK: - Game logic
     
     func start() {
-        
-        let player1 = Player(name: "Équipe 1", team: [])
-        let player2 = Player(name: "Équipe 2", team: [])
-        
-        if let input: String = readLine(){
-            if let int = Int(String?(input)!) {
-                settings(input: int, nameInput: input, player: &player1.team )
-                print(player1.team[0].name)
+        settings()
+        play()
+        end()
+    }
+    
+    private func settings() {
+        var playerCounter = 1
+        repeat {
+            let name = createName()
+            let team = createTeam()
+            let player = Player(name: name, team: team)
+            players.append(player)
+            playerCounter += 1
+        } while playerCounter <= playerQuantity
+    }
+    
+    private func createName() -> String {
+        var name = ""
+        print("Merci d'entrer votre nom:")
+        var errorCounter = 0
+        repeat {
+            if errorCounter >= 1 {
+                print("Merci d'entrer un nom valide, et non deja utilisé ☝️")
             }
-        }
-        //play()
-        //end()
+            if let stringInput = readLine() {
+                name = stringInput
+            } else {
+                name = ""
+            }
+            errorCounter += 1
+        } while name == "" || names.contains(name)
+        names.append(name)
+        return name
+    }
+    
+     func createTeam() -> [Character] {
+        var characters: [Character] = []
+        var characterCounter = 1
+        var choice = 0
+        let characterChoice = CharacterType.init(rawValue: choice)
+        var errorCounter = 0
+        repeat {
+            if errorCounter >= 1 {
+                print("Merci d'entrer un numéro valide ☝️")
+            }
+            if let intInput = readLine() {
+                choice = Int(intInput)!
+            } else {
+                choice = 0
+            }
+            errorCounter += 1
+            let character = Character(name: createName(), type: characterChoice!)
+            characters.append(character)
+            characterCounter += 1
+        } while characterCounter <= characterQuantity
+        // Creer un personnage
+        // Lui donner un nom
+        // Lui donner un type
+        
+        return characters
     }
     
     // Créer les 2 Players (donner un nom)
     // Pour chacun: Créer leur équipe de character (name, type)
-    func settings(input: Int, nameInput: String, player: inout [Character]) {
-        
-        switch input {
-        case 1:
-            let dwarf = Character.init(name: nameInput, type: CharacterType.dwarf, weapon: Weapon.init(type: WeaponType.axe))
-            print("Vous avez choisi le nain")
-            player.append(dwarf)
-            print("Nommez votre personnage")
-        case 2:
-            let warrior = Character.init(name: nameInput, type: CharacterType.warrior , weapon: Weapon.init(type: WeaponType.sword))
-            print("Vous avez choisi le combattant")
-            player.append(warrior)
-        case 3:
-            let colossus = Character.init(name: nameInput, type: CharacterType.colossus , weapon: Weapon.init(type: WeaponType.lance))
-            print("Vous avez choisi le colosse")
-            player.append(colossus)
-        case 4:
-            let magus = Character.init(name: nameInput, type: CharacterType.magus , weapon: Weapon.init(type: WeaponType.rosary))
-            print("Vous avez choisi le mage")
-            player.append(magus)
-        default:
-            print("Choix non reconnu")
-        }
-        
-    }
+
     
     // Selectionner un character chez player 1
     // Selectionner un character chez player 2
     // Resolution des combats
     // On reboucle tant que les 2 players ont au moins un chracacter vivant qui n'est pas un magus.
-    func play() {
+    private func play() {
         
     }
     
-    func end() {
+    private func end() {
         
     }
 }

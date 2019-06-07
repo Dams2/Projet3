@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// This enum list all the weapon type available, here you'll need to add more if needed.
 enum WeaponType {
     case axe
     case sword
@@ -15,15 +16,14 @@ enum WeaponType {
     case rosary
 }
 
-// Type
-// Power
+/// This class represent a weapon
 final class Weapon {
     
-    // Mark: - Private property
-    
-    let power: Int
+    // Mark: - Properties
     
     let type: WeaponType
+    
+    let power: Int
     
     // Mark: - Initializer
     
@@ -37,5 +37,5 @@ final class Weapon {
         case .rosary: self.power = -20
         }
     }
-    
 }
+
