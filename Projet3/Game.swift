@@ -22,7 +22,7 @@ final class Game {
         play()
         end()
     }
-    
+
     private func settings() {
         var playerCounter = 1
         repeat {
@@ -53,46 +53,48 @@ final class Game {
         return name
     }
     
-     func createTeam() -> [Character] {
+    func createTeam() -> [Character] {
         var characters: [Character] = []
         var characterCounter = 1
-        var choice = 0
-        let characterChoice = CharacterType.init(rawValue: choice)
+        repeat {
+            print("repeat")
+            let chooseCharacter = chooseCharacterType()
+            let chooseName = createName()
+            let character = Character(name: chooseName, type: chooseCharacter)
+            characters.append(character)
+            characterCounter += 1
+        } while characterCounter <= characterQuantity
+        print("Vous avez choisi", characters.count)
+        return characters
+    }
+    
+    private func chooseCharacterType() -> CharacterType {
+        //// Code pour selectionner un type et le renvoyer
+        var choose: Int?
+        print("Merci de choisir un personnage:")
         var errorCounter = 0
         repeat {
             if errorCounter >= 1 {
                 print("Merci d'entrer un numéro valide ☝️")
             }
             if let intInput = readLine() {
-                choice = Int(intInput)!
+                choose = Int(intInput)
             } else {
-                choice = 0
+                choose = nil
             }
             errorCounter += 1
-            let character = Character(name: createName(), type: characterChoice!)
-            characters.append(character)
-            characterCounter += 1
-        } while characterCounter <= characterQuantity
-        // Creer un personnage
-        // Lui donner un nom
-        // Lui donner un type
-        
-        return characters
+        } while choose == nil
+        //// Indice: return CharacterType(rawValue: entrée utilisateur au format Int)
+    return CharacterType(rawValue: choose!)!
     }
     
-    // Créer les 2 Players (donner un nom)
-    // Pour chacun: Créer leur équipe de character (name, type)
-
-    
-    // Selectionner un character chez player 1
-    // Selectionner un character chez player 2
-    // Resolution des combats
-    // On reboucle tant que les 2 players ont au moins un chracacter vivant qui n'est pas un magus.
     private func play() {
-        
+        // Selectionner un character chez player 1
+        // Selectionner un character chez player 2
+        // Resolution des combats
+        // On reboucle tant que les 2 players ont au moins un chracacter vivant qui n'est pas un magus.
     }
-    
+
     private func end() {
-        
     }
 }
