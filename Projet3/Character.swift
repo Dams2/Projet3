@@ -29,7 +29,11 @@ final class Character {
     
     let weapon: Weapon
     
-    let life: Int
+    private(set) var life: Int
+    
+    var isAlive: Bool {
+        return life > 0
+    }
     
     // MARK: - Initializer
     

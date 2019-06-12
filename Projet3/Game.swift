@@ -14,15 +14,17 @@ final class Game {
     private let characterQuantity = 3
     private var players: [Player] = []
     private var names: [String] = []
-
+    
     // MARK: - Game logic
     
     func start() {
-        settings()
+       // settings()
         play()
-        end()
+       // end()
     }
-
+    
+    // MARK: - Settings
+    
     private func settings() {
         var playerCounter = 1
         repeat {
@@ -32,6 +34,21 @@ final class Game {
             players.append(player)
             playerCounter += 1
         } while playerCounter <= playerQuantity
+    }
+    
+    private func createTeam() -> [Character] {
+        var characters: [Character] = []
+        var characterCounter = 1
+        repeat {
+            print("repeat")
+            let name = createName()
+            let type = chooseCharacterType()
+            let character = Character(name: name, type: type)
+            characters.append(character)
+            characterCounter += 1
+        } while characterCounter <= characterQuantity
+        print("Vous avez choisi", characters.count)
+        return characters
     }
     
     private func createName() -> String {
@@ -53,48 +70,59 @@ final class Game {
         return name
     }
     
-    func createTeam() -> [Character] {
-        var characters: [Character] = []
-        var characterCounter = 1
-        repeat {
-            print("repeat")
-            let chooseCharacter = chooseCharacterType()
-            let chooseName = createName()
-            let character = Character(name: chooseName, type: chooseCharacter)
-            characters.append(character)
-            characterCounter += 1
-        } while characterCounter <= characterQuantity
-        print("Vous avez choisi", characters.count)
-        return characters
-    }
-    
     private func chooseCharacterType() -> CharacterType {
-        //// Code pour selectionner un type et le renvoyer
-        var choose: Int?
+        var chosenIndex: Int? = nil
+        var chosenType: CharacterType? = nil
         print("Merci de choisir un personnage:")
         var errorCounter = 0
         repeat {
             if errorCounter >= 1 {
                 print("Merci d'entrer un numéro valide ☝️")
             }
-            if let intInput = readLine() {
-                choose = Int(intInput)
+            if let stringInput = readLine(), let intInput = Int(stringInput), let type = CharacterType(rawValue: intInput) {
+                chosenType = type
             } else {
-                choose = nil
+                chosenType = nil
+                chosenIndex = nil
             }
             errorCounter += 1
-        } while choose == nil
-        //// Indice: return CharacterType(rawValue: entrée utilisateur au format Int)
-    return CharacterType(rawValue: choose!)!
+        } while chosenIndex == nil || chosenType == nil
+        return chosenType!
     }
     
+    // MARK: - Play
+    
     private func play() {
-        // Selectionner un character chez player 1
-        // Selectionner un character chez player 2
-        // Resolution des combats
-        // On reboucle tant que les 2 players ont au moins un chracacter vivant qui n'est pas un magus.
+        repeat {
+            let attacker = players[0]
+            let defender = players[1]
+            // Selectionner un character chez player 1
+            print("Sélectionnez un personnage dans votre équipe 👇")
+            let selectedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
+            
+            
+            // Selectionner un character chez player 2 ou player 1 (selon le type de character selectionné chez player 1)
+            // Résolution des combats
+            // Impression du recap
+            players.swapAt(0, 1)
+        } while players[0].team.contains(where: { $0.isAlive && $0.type != .magus })
+            && players[1].team.contains(where: { $0.isAlive && $0.type != .magus })
+        // Go to end
+    }
+    
+    private func chooseCharacter(at index: Int, in team: [Character]) -> Character {
+        
+        return
+    }
+    
+    private func chooseIndex() -> Int {
+        
+        return //
     }
 
+    // MARK: - End
+    
     private func end() {
     }
 }
+
