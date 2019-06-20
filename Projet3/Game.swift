@@ -14,11 +14,12 @@ final class Game {
     private let characterQuantity = 3
     private var players: [Player] = []
     private var names: [String] = []
+    private var characters: [Character] = []
     
     // MARK: - Game logic
     
     func start() {
-       // settings()
+        settings()
         play()
        // end()
     }
@@ -28,6 +29,11 @@ final class Game {
     private func settings() {
         var playerCounter = 1
         repeat {
+            if playerCounter == 1 {
+                print("Joueur: 1 ")
+            } else {
+                print("Joueur: 2")
+            }
             let name = createName()
             let team = createTeam()
             let player = Player(name: name, team: team)
@@ -37,12 +43,11 @@ final class Game {
     }
     
     private func createTeam() -> [Character] {
-        var characters: [Character] = []
         var characterCounter = 1
+        let name = createName()
+        let type = chooseCharacterType()
         repeat {
             print("repeat")
-            let name = createName()
-            let type = chooseCharacterType()
             let character = Character(name: name, type: type)
             characters.append(character)
             characterCounter += 1
@@ -96,12 +101,19 @@ final class Game {
         repeat {
             let attacker = players[0]
             let defender = players[1]
+            let magus = CharacterType.init(rawValue: 3)
             // Selectionner un character chez player 1
             print("Sélectionnez un personnage dans votre équipe 👇")
             let selectedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
-            
-            
             // Selectionner un character chez player 2 ou player 1 (selon le type de character selectionné chez player 1)
+            if selectedCharacter.type == magus {
+                print("Choisissez un personnage à soigner")
+                let selectedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
+            } else {
+                print("Choisissez un personnage à attaquer")
+                let selectedCharacter = chooseCharacter(at: chooseIndex(), in: defender.team)
+                selectedCharacter.life
+            }
             // Résolution des combats
             // Impression du recap
             players.swapAt(0, 1)
@@ -111,13 +123,28 @@ final class Game {
     }
     
     private func chooseCharacter(at index: Int, in team: [Character]) -> Character {
-        
-        return
+        return team[index]
     }
     
     private func chooseIndex() -> Int {
+        var chosenIndex: Int?
+        var errorCounter = 0
+        repeat {
+            if errorCounter >= 1 {
+                print("Merci d'entrer un numéro valide ☝️")
+            }
+            if let stringInput = readLine(), let intInput = Int(stringInput) {
+                chosenIndex = intInput
+            } else {
+                chosenIndex = nil
+            }
+            errorCounter += 1
+        } while chosenIndex == nil
+        return chosenIndex!
+    }
+    
+    private func fight() {
         
-        return //
     }
 
     // MARK: - End

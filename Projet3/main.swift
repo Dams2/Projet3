@@ -9,6 +9,5 @@
 import Foundation
 
 let game = Game()
-//game.start()
-game.createTeam()
+game.start()
 
