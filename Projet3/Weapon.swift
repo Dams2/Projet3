@@ -8,12 +8,21 @@
 
 import Foundation
 
+enum ActionType {
+    case heal(value: Int)
+    case damage(value: Int)
+}
+
 /// This enum list all the weapon type available, here you'll need to add more if needed.
-enum WeaponType {
-    case axe
-    case sword
-    case lance
-    case rosary
+enum WeaponType: String {
+    case axe = "Hache"
+    case sword = "Épée"
+    case lance = "Lance"
+    case rosary = "Résurection"
+    case superAxe = "Super Hache"
+    case superSword = "Super épée"
+    case superLance = "Super Lance"
+    case superRosary = "Super Résurection"
 }
 
 /// This class represent a weapon
@@ -23,7 +32,7 @@ final class Weapon {
     
     let type: WeaponType
     
-    let power: Int
+    var action: ActionType
     
     // Mark: - Initializer
     
@@ -31,11 +40,22 @@ final class Weapon {
         self.type = type
         
         switch self.type  {
-        case .axe: self.power = 30
-        case .sword: self.power = 20
-        case .lance: self.power = 15
-        case .rosary: self.power = -20
+        case .axe:
+            self.action = .damage(value: 30)
+        case .sword:
+            self.action = .damage(value: 20)
+        case .lance:
+            self.action = .damage(value: 15)
+        case .rosary:
+            self.action = .heal(value: 20)
+        case .superAxe:
+            self.action = .damage(value: 45)
+        case .superSword:
+            self.action = .damage(value: 30)
+        case .superLance:
+            self.action = .damage(value: 25)
+        case .superRosary:
+            self.action = .heal(value: 25)
         }
     }
 }
-

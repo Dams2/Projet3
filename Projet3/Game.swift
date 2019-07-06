@@ -14,14 +14,15 @@ final class Game {
     private let characterQuantity = 3
     private var players: [Player] = []
     private var names: [String] = []
-    private var characters: [Character] = []
+    private var numberOfTurns = 0
+    private var deadRemove = 0
     
     // MARK: - Game logic
     
     func start() {
         settings()
         play()
-       // end()
+        end()
     }
     
     // MARK: - Settings
@@ -30,10 +31,11 @@ final class Game {
         var playerCounter = 1
         repeat {
             if playerCounter == 1 {
-                print("Joueur: 1 ")
+                print("Joueur 1️⃣")
             } else {
-                print("Joueur: 2")
+                print("\nJoueur 2️⃣")
             }
+            print("Merci d'entrer votre nom:")
             let name = createName()
             let team = createTeam()
             let player = Player(name: name, team: team)
@@ -44,21 +46,25 @@ final class Game {
     
     private func createTeam() -> [Character] {
         var characterCounter = 1
-        let name = createName()
-        let type = chooseCharacterType()
+        var characters: [Character] = []
         repeat {
-            print("repeat")
+            print("\nMerci d'entrer un nom de personnage: ")
+            let name = createName()
+            print("\nMerci de choisir un personnage:")
+            let type = chooseCharacterType()
             let character = Character(name: name, type: type)
             characters.append(character)
             characterCounter += 1
         } while characterCounter <= characterQuantity
-        print("Vous avez choisi", characters.count)
+        print("\nVoici votre équipe :")
+        characters.forEach {
+            print($0.description)
+        }
         return characters
     }
     
     private func createName() -> String {
         var name = ""
-        print("Merci d'entrer votre nom:")
         var errorCounter = 0
         repeat {
             if errorCounter >= 1 {
@@ -76,9 +82,9 @@ final class Game {
     }
     
     private func chooseCharacterType() -> CharacterType {
-        var chosenIndex: Int? = nil
         var chosenType: CharacterType? = nil
-        print("Merci de choisir un personnage:")
+        print("0.", CharacterType.dwarf, "-> PV: 60 / Attaque: 30 \n1.",CharacterType.warrior, "-> PV: 60 / Attaque: 30 \n2.", CharacterType.colossus, "-> PV: 60 / Attaque: 30 \n3.",CharacterType.magus, "-> PV: 60 / soin: 30\n")
+        print("Pour choisir veuillez entrer un numéro:")
         var errorCounter = 0
         repeat {
             if errorCounter >= 1 {
@@ -86,12 +92,12 @@ final class Game {
             }
             if let stringInput = readLine(), let intInput = Int(stringInput), let type = CharacterType(rawValue: intInput) {
                 chosenType = type
+                print("Vous avez choisi:", type)
             } else {
                 chosenType = nil
-                chosenIndex = nil
             }
             errorCounter += 1
-        } while chosenIndex == nil || chosenType == nil
+        } while chosenType == nil
         return chosenType!
     }
     
@@ -99,30 +105,74 @@ final class Game {
     
     private func play() {
         repeat {
+            numberOfTurns += 1
             let attacker = players[0]
             let defender = players[1]
-            let magus = CharacterType.init(rawValue: 3)
             // Selectionner un character chez player 1
+            print("\n\(attacker.name)")
             print("Sélectionnez un personnage dans votre équipe 👇")
+            attacker.printTeamDescription()
+            print("Entrez un numéro de 0 à \(attacker.team.count - 1)")
             let selectedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
-            // Selectionner un character chez player 2 ou player 1 (selon le type de character selectionné chez player 1)
-            if selectedCharacter.type == magus {
-                print("Choisissez un personnage à soigner")
-                let selectedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
-            } else {
-                print("Choisissez un personnage à attaquer")
-                let selectedCharacter = chooseCharacter(at: chooseIndex(), in: defender.team)
-                selectedCharacter.life
+            print("Vous avez choisi: \(selectedCharacter.name)")
+            
+            // Génération aléatoire d'un coffre
+            let chest = Chest()
+            if let weapon = chest.generateRandomWeapon() {
+                // p-e print le changement d'arme etc..
+                print("Un coffre est apparu 🤞 ")
+                selectedCharacter.updateWeapon(with: weapon) { (result) in
+                    switch result {
+                    case .success:
+                        print("\(selectedCharacter.name) a changé d'arme, il a reçu \(weapon.type.rawValue) 🙏")
+                    case .unsuccess:
+                        print("L'arme n'est pas compatible 👎")
+                    }
+                }
             }
-            // Résolution des combats
+            
+            var targetedCharacter: Character? = nil
+            if selectedCharacter.type == .magus {
+                print("\nChoisissez un personnage à soigner 💉")
+                attacker.printTeamDescription()
+                print("Entrez un numéro de 0 à \(attacker.team.count - 1)")
+                targetedCharacter = chooseCharacter(at: chooseIndex(), in: attacker.team)
+                print("\(selectedCharacter.name) soigne: \(targetedCharacter?.name ?? "Missing Name ☝️")")
+
+            } else {
+                print("\nChoisissez un personnage à attaquer 🔪")
+                defender.printTeamDescription()
+                print("Entrez un numéro de 0 à \(defender.team.count - 1)")
+                targetedCharacter = chooseCharacter(at: chooseIndex(), in: defender.team)
+                print("\(selectedCharacter.name) attaque: \(targetedCharacter?.name ?? "Missing Name ☝️")")
+            }
+            targetedCharacter?.updateLife(with: selectedCharacter.weapon.action)
             // Impression du recap
+            print("\nRecap :")
+            print("\(attacker.name)👇")
+            attacker.printTeamDescription()
+            print("\n\(defender.name)👇")
+            defender.printTeamDescription()
+            if targetedCharacter?.life == 0 {
+                print("\n\(targetedCharacter?.name ?? "Missing Name ☝️") est mort ⚰️")
+                defender.team.remove(at: deadRemove)
+            }
             players.swapAt(0, 1)
         } while players[0].team.contains(where: { $0.isAlive && $0.type != .magus })
             && players[1].team.contains(where: { $0.isAlive && $0.type != .magus })
-        // Go to end
     }
     
     private func chooseCharacter(at index: Int, in team: [Character]) -> Character {
+        deadRemove = index
+        var inputValidation = true
+        repeat {
+            if index > team.count {
+                inputValidation = false
+                print("Merci d'entrer un numéro valide ☝️")
+                return chooseCharacter(at: chooseIndex(), in: team)
+            }
+           inputValidation = true
+        } while inputValidation == false
         return team[index]
     }
     
@@ -143,13 +193,14 @@ final class Game {
         return chosenIndex!
     }
     
-    private func fight() {
-        
-    }
-
     // MARK: - End
     
     private func end() {
+        print("\nFin de la Partie\nNombre de tour:", numberOfTurns)
+        if players[0].team.contains(where: { $0.isAlive && $0.type != .magus }) {
+            print("\nle gagnant est -> \(players[0].name) félicitation 👏👏👏👏")
+        } else if players[1].team.contains(where: { $0.isAlive && $0.type != .magus }) {
+        print("\nle gagnant est -> \(players[1].name) félicitation 👏👏👏👏")
+        }
     }
 }
-

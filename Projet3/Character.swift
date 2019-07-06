@@ -20,27 +20,32 @@ enum CharacterType: Int {
 
 /// Doc for character
 final class Character {
-    
+
     // MARK: - Properties
-    
+
     let name: String
-    
+
     let type: CharacterType
-    
-    let weapon: Weapon
-    
+
+    var weapon: Weapon
+
     private(set) var life: Int
-    
+    private var maxLife: Int
+
     var isAlive: Bool {
         return life > 0
     }
-    
+
+    var description: String {
+        return "\(name) | \(type) | life: \(life)/\(maxLife)"
+    }
+
     // MARK: - Initializer
-    
+
     init(name: String, type: CharacterType) {
         self.name = name
         self.type = type
-        
+
         switch self.type {
         case .dwarf:
             self.life = 60
@@ -55,5 +60,42 @@ final class Character {
             self.life = 80
             self.weapon = Weapon(type: .rosary)
         }
+        self.maxLife = life
+    }
+
+    func updateLife(with action: ActionType) {
+        switch action {
+        case .damage(value: let value):
+            if value >= life {
+                life = 0
+            } else {
+                life -= value
+            }
+        case .heal(value: let value):
+            if isAlive {
+                if (value + life) > maxLife {
+                    life = maxLife
+                } else {
+                    life += value
+                }
+            }
+        }
+    }
+
+    func updateWeapon(with weapon: Weapon, callback: (Result) -> Void) {
+        if self.type == .magus, case .heal = weapon.action {
+            self.weapon = weapon
+            callback(.success)
+        } else if self.type != .magus, case .damage = weapon.action {
+            self.weapon = weapon
+            callback(.success)
+        } else {
+            callback(.unsuccess)
+        }
+    }
+    
+    enum Result {
+        case success
+        case unsuccess
     }
 }
