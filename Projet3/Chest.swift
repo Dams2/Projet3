@@ -8,7 +8,10 @@
 
 import Foundation
 
+/// This class represent a chest .
 final class Chest {
+    
+    // Mark: - Properties
     
     private var weapons = [
         Weapon(type: .superAxe),
@@ -16,6 +19,8 @@ final class Chest {
         Weapon(type: .superSword),
         Weapon(type: .superRosary)
     ]
+
+    // MARK: - Method
 
     func generateRandomWeapon() -> Weapon? {
         let index = Int.random(in: 0...19)

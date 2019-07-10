@@ -16,9 +16,7 @@ enum CharacterType: Int {
     case magus = 3
 }
 
-// Tips: let type = CharacterType(rawValue: 2) <- metre la veleur entrée par l'utilisateur.
-
-/// Doc for character
+/// This class represent a character.
 final class Character {
 
     // MARK: - Properties
@@ -62,6 +60,8 @@ final class Character {
         }
         self.maxLife = life
     }
+    
+    // MARK: - Method
 
     func updateLife(with action: ActionType) {
         switch action {

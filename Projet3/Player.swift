@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// This class represent a player.
 final class Player {
     
     // Mark: - Private property
@@ -22,6 +23,8 @@ final class Player {
         self.name = name
         self.team = team
     }
+    
+    // MARK: - Method
     
     func printTeamDescription(){
         team.forEach {

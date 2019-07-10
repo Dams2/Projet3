@@ -8,12 +8,13 @@
 
 import Foundation
 
+/// This enumeration lists the action of a weapon
 enum ActionType {
     case heal(value: Int)
     case damage(value: Int)
 }
 
-/// This enum list all the weapon type available, here you'll need to add more if needed.
+/// This enum list all the weapon type available.
 enum WeaponType: String {
     case axe = "Hache"
     case sword = "Épée"
@@ -25,7 +26,7 @@ enum WeaponType: String {
     case superRosary = "Super Résurection"
 }
 
-/// This class represent a weapon
+/// This class represent a weapon.
 final class Weapon {
     
     // Mark: - Properties
