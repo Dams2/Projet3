@@ -34,7 +34,7 @@ final class Game {
             } else {
                 print("\nJoueur 2️⃣")
             }
-            // The players enter their name, names and chooses 3 characters
+            // The players enter their name, names and chooses 3 characters 
             print("Merci d'entrer votre nom:")
             let name = createName()
             let team = createTeam()

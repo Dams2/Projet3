@@ -11,7 +11,7 @@ import Foundation
 /// This class represent a player.
 final class Player {
     
-    // Mark: - Private property
+    // Mark: - Property
     
     let name: String
     
